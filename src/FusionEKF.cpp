@@ -15,8 +15,7 @@ using std::vector;
 FusionEKF::FusionEKF() {
   
   
-    noise_ax = 9;
-    noise_ay = 9;
+
   is_initialized_ = false;
 
   previous_timestamp_ = 0;
@@ -27,12 +26,14 @@ FusionEKF::FusionEKF() {
   H_laser_ = MatrixXd(2, 4);
   Hj_ = MatrixXd(3, 4);
 
+  // Imp Initilization - this will reduce the RMSE (visibily)
   H_laser_ << 1,0,0,0,
              0,1,0,0;
   
   Hj_ << 1,1,0,0,
-         1,1,0,0,
-         1,1,1,1;
+         -1,1,0,0,
+  		 1,1,1,1;
+
   //measurement covariance matrix - laser
   R_laser_ << 0.0225, 0,
               0, 0.0225;
@@ -58,7 +59,9 @@ FusionEKF::FusionEKF() {
             0, 1, 0, 0,
             0, 0, 1000, 0,
             0, 0, 0, 1000;
-
+	
+      noise_ax = 9;
+    noise_ay = 9;
 }
 
 /**

@@ -67,15 +67,17 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   float theta = atan2(py,px);
   float rhodot = (px * vx+ py* vy)  / rho  ;
   
-  VectorXd h = VectorXd(3);
-  h<< rho , theta , rhodot;
-  VectorXd  y = z-h;
+  VectorXd h1 = VectorXd(3);
   
-  while (y[1] < -M_PI){
-      y[1] += 2 * M_PI;
+  h1<< rho , theta , rhodot;
+  VectorXd  y = z-h1;
+  
+  //Estimations are more near to the measurements . with normalization.
+  if (y[1] < -M_PI){
+      y[1] += 2 * M_PI;//Normalize with 2pi if thetha less 
   }
-  while (y[1] > M_PI){
-    y[1] -= 2 * M_PI;
+  if (y[1] > M_PI){
+    y[1] -= 2 * M_PI;;//Normalize with 2pi if thetha greater 
   }
   
   
